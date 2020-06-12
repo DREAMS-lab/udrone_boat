@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <!-- MAVROS posix SITL environment launch script -->
+    <!-- launches Gazebo environment and 2x: MAVROS, PX4 SITL, and spawns vehicle -->
+    <!-- vehicle model and world -->
+    <arg name="est" default="ekf2"/>
+    <arg name="vehicle" default="plane"/>
+    <arg name="world" default="$(find udrone_boat)/worlds/tempe.world"/>
+    <!-- <arg name="world" default="$(find uuv_gazebo_worlds)/worlds/auv_underwater_world.world"/> -->
+
+    <!-- gazebo configs -->
+    <!-- Setting GUI to false results in faster execution of Gazebo-->
+    <arg name="gui" default="false"/>
+    <arg name="debug" default="false"/>
+    <arg name="verbose" default="false"/>
+    <arg name="paused" default="false"/>
+
+    <!-- Gazebo sim -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="world_name" value="$(arg world)"/>
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="verbose" value="$(arg verbose)"/>
+        <arg name="paused" value="$(arg paused)"/>
+    </include>
+
+    <!-- boat -->
+    <group ns="boat">
+        <!-- MAVROS and vehicle configs -->
+        <arg name="ID" value="0"/>
+        <arg name="fcu_url" default="udp://:14540@localhost:14580"/>
+        <!-- PX4 SITL and vehicle spawn -->
+        <include file="$(find px4)/launch/single_vehicle_spawn_sdf.launch">
+            <arg name="x" value="0"/>
+            <arg name="y" value="0"/>
+            <arg name="z" value="0"/>
+            <arg name="R" value="0"/>
+            <arg name="P" value="0"/>
+            <arg name="Y" value="0"/>
+            <arg name="vehicle" value="boat"/>
+            <arg name="msdf" value="heron"/>
+            <arg name="mavlink_udp_port" value="14560"/>
+            <arg name="mavlink_tcp_port" value="4560"/>
+            <arg name="ID" value="$(arg ID)"/>
+        </include>
+        <!-- MAVROS -->
+        <include file="$(find mavros)/launch/px4.launch">
+            <arg name="fcu_url" value="$(arg fcu_url)"/>
+            <arg name="gcs_url" value=""/>
+            <arg name="tgt_system" value="$(eval 1 + arg('ID'))"/>
+            <arg name="tgt_component" value="1"/>
+        </include>
+    </group>
+
+    <!-- udrone -->
+    <group ns="udrone">
+        <!-- MAVROS and vehicle configs -->
+        <arg name="ID" value="1"/>
+        <arg name="fcu_url" default="udp://:14541@localhost:14581"/>
+        <!-- PX4 SITL and vehicle spawn -->
+        <include file="$(find px4)/launch/single_vehicle_spawn_sdf.launch">
+            <arg name="x" value="0"/>
+            <arg name="y" value="0"/>
+            <arg name="z" value="-5"/>
+            <arg name="R" value="0"/>
+            <arg name="P" value="0"/>
+            <arg name="Y" value="0"/>
+            <arg name="vehicle" value="uuv_hippocampus"/>
+            <arg name="msdf" value="udrone"/>
+            <arg name="mavlink_udp_port" value="14561"/>
+            <arg name="mavlink_tcp_port" value="4561"/>
+            <arg name="ID" value="$(arg ID)"/>
+        </include>
+
+        <!-- MAVROS -->
+        <include file="$(find mavros)/launch/px4.launch">
+            <arg name="fcu_url" value="$(arg fcu_url)"/>
+            <arg name="gcs_url" value=""/>
+            <arg name="tgt_system" value="$(eval 1 + arg('ID'))"/>
+            <arg name="tgt_component" value="1"/>
+        </include>
+    </group>
+    
+
+    <arg name="port" default="9090" />
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+        <arg name="port" value="9090" />
+        <arg name="bson_only_mode" value="true"/>
+    </include>
+
+    <!-- convert CompressedImage from Unity3D to image_raw -->
+    <!-- rosrun image_transport republish compressed in:=/udrone/camera/front/rgb/ out:=/udrone/camera/front/image_raw/raw  _image_transport:=compressed -->
+    <node name="republish1" type="convert" pkg="ros_sharp_time_synchronizer" output="screen" required="true" />
+
+    <!-- Send pose to Unity3D through ROS-Sharp in game units -->
+    <node pkg="ros_sharp_pose_publisher" name="send_kinematics" type="send_kinematics.py" output="screen" />
+    <!-- rectified images are published on /udrone/camera/front/image_raw/image_raw -->
+    <node name="image_proc" pkg="image_proc" type="image_proc" ns="udrone/camera/up/image_raw"/>
+
+
+<!--    Not ground truth tf's  -->
+<!--    rosrun tf static_transform_publisher 0 0 -0.2 0 0 -1.5709 world aruco_marker_frame 1000-->
+<!--    rosrun tf static_transform_publisher 0.000015 -0.15 -0.12 0.0 0.0 0.70714343424 0.70707012622 camera_frame udrone 1000-->
+<!--    These tf's are necessary for the boat-udrone setup, but doesn't include ground truth.
+        To publish ground truth tf , do roslaunch gazebo_ground_truth ground_truth_tf.launch
+-->
+    <node pkg="tf" type="static_transform_publisher" name="world_to_marker" args="0 0 -0.2 0 0 -1.5709 world marker 100" />
+    <node pkg="tf" type="static_transform_publisher" name="camera_to_udrone" args="0.000015 -0.15 -0.12 0.0 0.0 0.70714343424 0.70707012622 camera udrone 100" />
+
+<!--    This code is required to get ground truth pose -->
+<!--   <include file="$(find gazebo_ground_truth)/launch/ground_truth_tf.launch"></include> -->
+</launch>

@@ -1,0 +1,200 @@
+<?xml version="1.0" ?>
+<robot name="udrone">
+  <joint name="udrone__uuv_hippocampus/imu_joint" type="fixed">
+    <parent link="udrone__base_link"/>
+    <child link="udrone__uuv_hippocampus/imu_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="0.0" lower="0.0" upper="0.0" velocity="0.0"/>
+  </joint>
+  <joint name="udrone__rotor_0_joint" type="revolute">
+    <parent link="udrone__base_link"/>
+    <child link="udrone__rotor_0"/>
+    <origin rpy="0 0 0" xyz="-0.08    0.1401  0.1381"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="0.0" lower="-1e+16" upper="1e+16" velocity="0.0"/>
+  </joint>
+  <joint name="udrone__rotor_1_joint" type="revolute">
+    <parent link="udrone__base_link"/>
+    <child link="udrone__rotor_1"/>
+    <origin rpy="0 0 0" xyz="-0.08   -0.1401  0.1381"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="0.0" lower="-1e+16" upper="1e+16" velocity="0.0"/>
+  </joint>
+  <joint name="udrone__rotor_2_joint" type="revolute">
+    <parent link="udrone__base_link"/>
+    <child link="udrone__rotor_2"/>
+    <origin rpy="0 0 0" xyz="-0.07   -0.1401 -0.1301"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="0.0" lower="-1e+16" upper="1e+16" velocity="0.0"/>
+  </joint>
+  <joint name="udrone__rotor_3_joint" type="revolute">
+    <parent link="udrone__base_link"/>
+    <child link="udrone__rotor_3"/>
+    <origin rpy="0 0 0" xyz="-0.07    0.1401 -0.1301"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="0.0" lower="-1e+16" upper="1e+16" velocity="0.0"/>
+  </joint>
+  <joint name="udrone__uuv_hippocampus_cam_up_joint" type="fixed">
+    <parent link="udrone__base_link"/>
+    <child link="udrone__uuv_hippocampus_cam_up"/>
+    <origin rpy="0   -1.57  0" xyz="0.15 0   0.12"/>
+    <axis xyz="7.9e-04  0.0e+00 -1.0e+00"/>
+    <limit effort="0.0" lower="0.0" upper="0.0" velocity="0.0"/>
+  </joint>
+  <joint name="udrone__uuv_hippocampus_cam_down_joint" type="fixed">
+    <parent link="udrone__base_link"/>
+    <child link="udrone__uuv_hippocampus_cam_down"/>
+    <origin rpy="0   1.57 0" xyz="0.15  0   -0.12"/>
+    <axis xyz="7.9e-04 0.0e+00 1.0e+00"/>
+    <limit effort="0.0" lower="0.0" upper="0.0" velocity="0.0"/>
+  </joint>
+  <joint name="udrone__uuv_hippocampus_cam_front_joint" type="fixed">
+    <parent link="udrone__base_link"/>
+    <child link="udrone__uuv_hippocampus_cam_front"/>
+    <origin rpy="0 0 0" xyz="0.2 0  0"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="0.0" lower="0.0" upper="0.0" velocity="0.0"/>
+  </joint>
+  <link name="udrone__base_link">
+    <inertial>
+      <mass value="5.47"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.024" ixy="0" ixz="0" iyy="0.10717" iyz="0" izz="0.10717"/>
+    </inertial>
+    <collision name="udrone__base_link_inertia_collision">
+      <origin rpy="0      1.57079 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.322" radius="0.108"/>
+      </geometry>
+    </collision>
+    <visual name="udrone__base_link_inertia_visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://sitl_gazebo/models/udrone/meshes/udrone.dae OR Firmware/Tools/sitl_gazebo/models/udrone/meshes/udrone.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="udrone__uuv_hippocampus/imu_link">
+    <inertial>
+      <mass value="0.015"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="1e-05" ixy="0" ixz="0" iyy="1e-05" iyz="0" izz="1e-05"/>
+    </inertial>
+  </link>
+  <link name="udrone__rotor_0">
+    <inertial>
+      <mass value="0.005"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000273104" iyz="0" izz="0.000274004"/>
+    </inertial>
+    <collision name="udrone__rotor_0_collision">
+      <origin rpy="0 0 0" xyz="0   0   0.02"/>
+      <geometry>
+        <cylinder length="0.06" radius="0.02"/>
+      </geometry>
+    </collision>
+    <visual name="udrone__rotor_0_visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://sitl_gazebo/models/udrone/meshes/udrone_prop.stl OR Firmware/Tools/sitl_gazebo/models/udrone/meshes/udrone_prop.stl" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="udrone__rotor_1">
+    <inertial>
+      <mass value="0.005"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000273104" iyz="0" izz="0.000274004"/>
+    </inertial>
+    <collision name="udrone__rotor_1_collision">
+      <origin rpy="0 0 0" xyz="0   0   0.02"/>
+      <geometry>
+        <cylinder length="0.06" radius="0.02"/>
+      </geometry>
+    </collision>
+    <visual name="udrone__rotor_1_visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://sitl_gazebo/models/udrone/meshes/udrone_prop.stl OR Firmware/Tools/sitl_gazebo/models/udrone/meshes/udrone_prop.stl" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="udrone__rotor_2">
+    <inertial>
+      <mass value="0.005"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000273104" iyz="0" izz="0.000274004"/>
+    </inertial>
+    <collision name="udrone__rotor_2_collision">
+      <origin rpy="0 0 0" xyz="0   0   0.02"/>
+      <geometry>
+        <cylinder length="0.06" radius="0.02"/>
+      </geometry>
+    </collision>
+    <visual name="udrone__rotor_2_visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://sitl_gazebo/models/udrone/meshes/udrone_prop.stl OR Firmware/Tools/sitl_gazebo/models/udrone/meshes/udrone_prop.stl" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="udrone__rotor_3">
+    <inertial>
+      <mass value="0.005"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="9.75e-07" ixy="0" ixz="0" iyy="0.000273104" iyz="0" izz="0.000274004"/>
+    </inertial>
+    <collision name="udrone__rotor_3_collision">
+      <origin rpy="0 0 0" xyz="0   0   0.02"/>
+      <geometry>
+        <cylinder length="0.06" radius="0.02"/>
+      </geometry>
+    </collision>
+    <visual name="udrone__rotor_3_visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://sitl_gazebo/models/udrone/meshes/udrone_prop.stl OR Firmware/Tools/sitl_gazebo/models/udrone/meshes/udrone_prop.stl" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="udrone__uuv_hippocampus_cam_up">
+    <inertial>
+      <mass value="0.000001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="1e-06" ixy="0" ixz="0" iyy="1e-06" iyz="0" izz="1e-06"/>
+    </inertial>
+    <visual name="udrone__visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="udrone__uuv_hippocampus_cam_down">
+    <inertial>
+      <mass value="0.000001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="1e-06" ixy="0" ixz="0" iyy="1e-06" iyz="0" izz="1e-06"/>
+    </inertial>
+    <visual name="udrone__visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="udrone__uuv_hippocampus_cam_front">
+    <inertial>
+      <mass value="0.000001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="1e-06" ixy="0" ixz="0" iyy="1e-06" iyz="0" izz="1e-06"/>
+    </inertial>
+    <visual name="udrone__visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
