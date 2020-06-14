@@ -71,7 +71,7 @@ class UdroneController:
         self.att.thrust = 0.3
         self.att.type_mask = 7  # ignore body rate
 
-        xPID = PID(kp=0.2, kd=0.2, ki=0.1)
+        xPID = PID(kp=0.1, kd=0.05, ki=0.05)
         zPID = PID(kp=0.03, kd=0.01, ki=0.01)
         yPID = PID(kp=0.03, kd=0.01, ki=0.01)
 

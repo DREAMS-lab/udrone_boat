@@ -91,23 +91,32 @@
 
     <!-- convert CompressedImage from Unity3D to image_raw -->
     <!-- rosrun image_transport republish compressed in:=/udrone/camera/front/rgb/ out:=/udrone/camera/front/image_raw/raw  _image_transport:=compressed -->
-    <node name="republish1" type="convert" pkg="ros_sharp_time_synchronizer" output="screen" required="true" />
+    <node name="republish1" type="convert" pkg="ros_sharp_time_synchronizer" output="screen" required="true" >
+        <param name="image" value="/udrone/camera/up/" />
+    </node>
+    <node name="republish2" type="convert" pkg="ros_sharp_time_synchronizer" output="screen" required="true" >
+        <param name="image" value="/udrone/camera/front/" />
+    </node>
 
     <!-- Send pose to Unity3D through ROS-Sharp in game units -->
     <node pkg="ros_sharp_pose_publisher" name="send_kinematics" type="send_kinematics.py" output="screen" />
+
     <!-- rectified images are published on /udrone/camera/front/image_raw/image_raw -->
     <node name="image_proc" pkg="image_proc" type="image_proc" ns="udrone/camera/up/image_raw"/>
 
 
-<!--    Not ground truth tf's  -->
-<!--    rosrun tf static_transform_publisher 0 0 -0.2 0 0 -1.5709 world aruco_marker_frame 1000-->
-<!--    rosrun tf static_transform_publisher 0.000015 -0.15 -0.12 0.0 0.0 0.70714343424 0.70707012622 camera_frame udrone 1000-->
-<!--    These tf's are necessary for the boat-udrone setup, but doesn't include ground truth.
-        To publish ground truth tf , do roslaunch gazebo_ground_truth ground_truth_tf.launch
--->
+    <!--    Not ground truth tf's  -->
+    <!--    rosrun tf static_transform_publisher 0 0 -0.2 0 0 -1.5709 world aruco_marker_frame 1000-->
+    <!--    rosrun tf static_transform_publisher 0.000015 -0.15 -0.12 0.0 0.0 0.70714343424 0.70707012622 camera_frame udrone 1000-->
+    <!--    These tf's are necessary for the boat-udrone setup, but doesn't include ground truth.
+            To publish ground truth tf , do roslaunch gazebo_ground_truth ground_truth_tf.launch
+    -->
     <node pkg="tf" type="static_transform_publisher" name="world_to_marker" args="0 0 -0.2 0 0 -1.5709 world marker 100" />
     <node pkg="tf" type="static_transform_publisher" name="camera_to_udrone" args="0.000015 -0.15 -0.12 0.0 0.0 0.70714343424 0.70707012622 camera udrone 100" />
 
-<!--    This code is required to get ground truth pose -->
-<!--   <include file="$(find gazebo_ground_truth)/launch/ground_truth_tf.launch"></include> -->
+    <!--    This code is required to get ground truth pose -->
+    <include file="$(find gazebo_ground_truth)/launch/ground_truth_tf.launch"></include>
+    <!--    ARUCO ROS detector -->
+    <include file="$(find aruco_ros)/launch/single.launch"></include>
+
 </launch>
