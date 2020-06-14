@@ -10,6 +10,7 @@ project(udrone_boat)
 find_package(catkin REQUIRED COMPONENTS
    roscpp
    rospy
+   aruco_ros
    std_msgs
    message_generation
 )
